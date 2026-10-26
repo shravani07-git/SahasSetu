@@ -44,3 +44,4 @@ next-env.d.ts
 /ml-service/artifacts/*
 !/ml-service/artifacts/.gitkeep
 /ml-service/.cache/
+/mongo-backup/
