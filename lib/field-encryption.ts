@@ -88,23 +88,27 @@ export const SENSITIVE_COMPLAINT_FIELDS = [
 type SensitiveComplaintField = (typeof SENSITIVE_COMPLAINT_FIELDS)[number];
 
 export function encryptComplaintFields<T extends Record<string, any>>(input: T): T {
-  const output = { ...input };
+  const output: Record<string, any> = { ...input };
+
   for (const field of SENSITIVE_COMPLAINT_FIELDS) {
     if (typeof output[field] === 'string') {
       output[field] = encryptField(output[field], `complaint.${field}`);
     }
   }
-  return output;
+
+  return output as T;
 }
 
 export function decryptComplaintFields<T extends Record<string, any>>(input: T): T {
-  const output = { ...input };
+  const output: Record<string, any> = { ...input };
+
   for (const field of SENSITIVE_COMPLAINT_FIELDS) {
     if (typeof output[field] === 'string') {
       output[field] = decryptField(output[field], `complaint.${field}`);
     }
   }
-  return output;
+
+  return output as T;
 }
 
 export function encryptComplaintValue(field: string, value: unknown): unknown {
@@ -122,17 +126,27 @@ export function encryptCounselingNotes(value: string | undefined | null): string
 }
 
 export function decryptCounselingRecord<T extends Record<string, any>>(input: T): T {
-  const output = { ...input };
+  const output: Record<string, any> = { ...input };
+
   if (typeof output.notes === 'string') {
     output.notes = decryptField(output.notes, 'counseling.notes');
   }
-  if (output.feedback && typeof output.feedback === 'object' && typeof output.feedback.comment === 'string') {
+
+  if (
+    output.feedback &&
+    typeof output.feedback === 'object' &&
+    typeof output.feedback.comment === 'string'
+  ) {
     output.feedback = {
       ...output.feedback,
-      comment: decryptField(output.feedback.comment, 'counseling.feedback.comment'),
+      comment: decryptField(
+        output.feedback.comment,
+        'counseling.feedback.comment'
+      ),
     };
   }
-  return output;
+
+  return output as T;
 }
 
 export function encryptCounselingFeedbackComment(value: string | undefined | null): string | undefined {
